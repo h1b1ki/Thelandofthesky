@@ -1,0 +1,116 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://脚本/卡牌脚本.gd" type="Script" id=1]
+[ext_resource path="res://素材/cardui2.png" type="Texture" id=2]
+[ext_resource path="res://zhs/SourceHanSerifSC-Medium.otf" type="DynamicFontData" id=3]
+[ext_resource path="res://素材/品质.png" type="Texture" id=4]
+[ext_resource path="res://素材/images/1024Portraits/red/attack/strike.png" type="Texture" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 30
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 30
+font_data = ExtResource( 3 )
+
+[node name="卡牌" type="TextureButton"]
+margin_left = -119.765
+margin_top = -154.814
+margin_right = 120.235
+margin_bottom = 182.186
+rect_min_size = Vector2( 240, 337 )
+rect_pivot_offset = Vector2( 120, 155 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="背景" type="TextureRect" parent="."]
+anchor_right = 0.796
+anchor_bottom = 1.01
+margin_right = 61.2
+margin_bottom = -3.34
+rect_min_size = Vector2( 597, 843 )
+rect_scale = Vector2( 0.4, 0.4 )
+mouse_filter = 2
+texture = ExtResource( 2 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="图片" type="TextureRect" parent="."]
+margin_left = 22.2879
+margin_top = 26.8118
+margin_right = 522.288
+margin_bottom = 406.812
+rect_scale = Vector2( 0.4, 0.4 )
+mouse_filter = 2
+texture = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="品质" type="TextureRect" parent="."]
+margin_left = -16.0267
+margin_top = 10.6634
+margin_right = 312.973
+margin_bottom = 87.6634
+rect_scale = Vector2( 0.8, 0.8 )
+mouse_filter = 2
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="消耗" type="Label" parent="."]
+margin_left = 4.0
+margin_top = 6.0
+margin_right = 22.0
+margin_bottom = 20.0
+text = "1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="描述" type="RichTextLabel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 28.0
+margin_top = 195.0
+margin_right = -23.0
+margin_bottom = -30.0
+mouse_filter = 2
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "[color=#FF3030]造成6点伤害[/color]"
+text = "造成6点伤害"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="名称" type="Label" parent="."]
+margin_left = 84.692
+margin_top = 3.73783
+margin_right = 154.692
+margin_bottom = 55.7378
+custom_fonts/font = SubResource( 2 )
+text = "打击"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 253.0
+margin_top = 3.0
+margin_right = 493.0
+margin_bottom = 566.0
+mouse_filter = 2
+custom_constants/separation = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="mouse_entered" from="." to="." method="_on__mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on__mouse_exited"]

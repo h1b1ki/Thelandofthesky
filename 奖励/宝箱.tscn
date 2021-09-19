@@ -1,0 +1,403 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://zhs/SourceHanSerifSC-Medium.otf" type="DynamicFontData" id=1]
+[ext_resource path="res://素材/宝箱等事件素材/小宝箱.png" type="Texture" id=2]
+[ext_resource path="res://素材/images/ui/reward/rewardScreenSheet.png" type="Texture" id=3]
+[ext_resource path="res://素材/images/ui/selectBanner.png" type="Texture" id=4]
+[ext_resource path="res://素材/images/ui/reward/takeAll.png" type="Texture" id=5]
+[ext_resource path="res://素材/images/ui/reward/takeAllUsed.png" type="Texture" id=6]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+#ka qian cheng    jipan rhes
+func initialization(weight):
+	for i in 4:
+		var Bar_box=load(\"res://奖励/获得奖励.tscn\").instance()
+		match i:
+			1:
+				var money:int=weight*Tool.integers(10,20)/10
+				Bar_box.initialization(['qian',money])
+				$rewardScreenSheet/Scroll/biao.add_child(Bar_box)
+			2:				
+				var cheng:int=weight*Tool.integers(10,20)/10
+				Bar_box.initialization(['cheng',cheng])
+				$rewardScreenSheet/Scroll/biao.add_child(Bar_box)
+			3:
+				Bar_box.initialization(['ka',0])
+				Bar_box.connect(\"card\",self,\"card_visible\")
+				$rewardScreenSheet/Scroll/biao.add_child(Bar_box)
+
+#按下宝箱
+func _on__button_down():
+	$rewardScreenSheet.visible=true
+	$selectBanner.visible=true
+	$\"宝箱\".visible=false
+	$AnimationPlayer.play(\"打开\")
+	yield($AnimationPlayer,\"animation_finished\")
+
+func card_visible():
+	print(\"www\")
+	$rewardScreenSheet.visible=false
+	var interval=1.0/(Game.reward_number-1)
+	var y=0
+	for x in Game.reward_cards:
+		var P=PathFollow2D.new()
+		$\"Path2D\".add_child(P)
+		#P.unit_offset=y*interval
+		x.rect_scale=Vector2(0,0)
+		P.add_child(x)
+		x.connect(\"button_down\",self,\"button_down\",[x])
+		x.connect(\"mouse_entered\",self,\"a\",[x])
+		x.connect(\"mouse_exited\",self,\"b\",[x])
+		$Tween.interpolate_property(P,\"unit_offset\",0.5,y*interval,0.5,Tween.TRANS_LINEAR);
+		$Tween.interpolate_property(x,\"rect_scale\",Vector2(1.5,1.5),Vector2(1.2,1.2),0.5,Tween.TRANS_LINEAR);
+		$Tween.start()
+		x.show_on_top
+		y+=1
+	$AnimationPlayer.play(\"卡片弹出\")
+	yield($AnimationPlayer,\"animation_finished\")
+func button_down(card):
+	Game.cards.append(card)
+	for x in $Path2D.get_children():
+		$Tween.interpolate_property(x,\"scale\",Vector2(1.2,1.2),Vector2(0.8,0.8),0.2,Tween.TRANS_LINEAR);
+		$Tween.start()
+	$Tween.interpolate_property(card,\"scale\",Vector2(1.3,1.3),Vector2(1.3,1.3),0.2,Tween.TRANS_LINEAR);
+	$rewardScreenSheet.visible=true
+	$AnimationPlayer.play(\"菜单重新弹出\")
+	yield($AnimationPlayer,\"animation_finished\")
+	$Path2D.queue_free()
+func a(card):
+	card.rect_scale=Vector2(1.3,1.3)
+	print('a')
+func b(card):
+	card.rect_scale=Vector2(1.2,1.2)
+#跳过拿牌
+func _on_takeAll_button_down():
+	for x in $Path2D.get_children():
+		$Tween.interpolate_property(x,\"scale\",Vector2(1.2,1.2),Vector2(0.8,0.8),0.2,Tween.TRANS_LINEAR);
+		$Tween.start()
+	$rewardScreenSheet.visible=true
+	$AnimationPlayer.play(\"菜单重新弹出\")
+	yield($AnimationPlayer,\"animation_finished\")
+	$Path2D.queue_free()
+	pass # Replace with function body.
+"
+
+[sub_resource type="DynamicFont" id=2]
+size = 50
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "卡片弹出"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("selectBanner:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0.333333 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("selectBanner:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 960, 200 ), Vector2( 960, 150 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("selectBanner/Label:custom_fonts/font:size")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 20, 50 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("takeAll:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0.333333 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("takeAll:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=4]
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.54902, 0.54902, 0.54902, 0 ), Color( 0, 0, 0, 0.862745 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("rewardScreenSheet:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.176471, 0.176471, 0.156863, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("selectBanner:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 960, 200 ), Vector2( 960, 150 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("selectBanner:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0.341176 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("selectBanner/Label:custom_fonts/font:size")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 20, 50 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "菜单重新弹出"
+length = 0.2
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("rewardScreenSheet:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.176471, 0.176471, 0.156863, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("selectBanner:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 960, 150 ), Vector2( 960, 200 ), Vector2( 960, 150 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("selectBanner:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.341176 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("selectBanner/Label:custom_fonts/font:size")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 50, 20, 50 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Path2D:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.266667 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("takeAll:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="DynamicFont" id=6]
+size = 50
+font_data = ExtResource( 1 )
+
+[sub_resource type="Curve2D" id=7]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 384, 656, 0, 0, 0, 0, 960, 656, 0, 0, 0, 0, 1536, 656 )
+}
+
+[node name="奖励" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color( 0.54902, 0.54902, 0.54902, 0 )
+margin_right = 1920.0
+margin_bottom = 1080.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="宝箱" type="TextureButton" parent="."]
+margin_left = 1485.35
+margin_top = 459.09
+margin_right = 1789.35
+margin_bottom = 659.09
+texture_normal = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="rewardScreenSheet" type="Sprite" parent="."]
+visible = false
+modulate = Color( 0.176471, 0.176471, 0.156863, 1 )
+position = Vector2( 943.727, 564.917 )
+texture = ExtResource( 3 )
+
+[node name="Scroll" type="ScrollContainer" parent="rewardScreenSheet"]
+margin_left = -219.0
+margin_top = -318.0
+margin_right = 248.0
+margin_bottom = 356.0
+rect_clip_content = false
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="biao" type="VBoxContainer" parent="rewardScreenSheet/Scroll"]
+mouse_filter = 2
+alignment = 1
+
+[node name="selectBanner" type="Sprite" parent="."]
+visible = false
+position = Vector2( 960, 150 )
+texture = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="selectBanner"]
+margin_left = -92.0419
+margin_top = -58.368
+margin_right = 57.9581
+margin_bottom = 14.632
+rect_pivot_offset = Vector2( 100, 30 )
+custom_fonts/font = SubResource( 2 )
+text = "好东西！"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+"anims/卡片弹出" = SubResource( 3 )
+"anims/打开" = SubResource( 4 )
+"anims/菜单重新弹出" = SubResource( 5 )
+
+[node name="takeAll" type="TextureButton" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0.333333 )
+margin_left = 692.965
+margin_top = 780.646
+margin_right = 1204.96
+margin_bottom = 1036.65
+texture_normal = ExtResource( 5 )
+texture_hover = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="takeAll"]
+margin_left = 209.304
+margin_top = 84.8529
+margin_right = 309.304
+margin_bottom = 157.853
+custom_fonts/font = SubResource( 6 )
+text = "跳过"
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource( 7 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[connection signal="button_down" from="宝箱" to="." method="_on__button_down"]
+[connection signal="button_down" from="takeAll" to="." method="_on_takeAll_button_down"]

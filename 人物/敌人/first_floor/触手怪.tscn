@@ -1,0 +1,343 @@
+[gd_scene load_steps=33 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Skeleton2D
+var hit_frequency:int
+var hit:int
+var debuff:Array
+var buff:Array
+
+signal die
+onready var anim_playback=$AnimationTree[\"parameters/playback\"]
+func _ready():
+	Game.weight+=Tool.integers(30,40)
+	pass 
+
+
+func state(turn):
+	hit_frequency=0
+	hit=0
+	debuff.clear()
+	buff.clear()
+	var m=Tool.integers(1,3)
+	m=1
+	match m:
+		1:
+			hit_frequency=2
+			hit=6
+		2:
+			buff=[[2,2],[1,3]]
+			debuff=[[1,4]]
+	pass
+#动画播放
+func anim():
+	if hit:
+		anim_playback.travel(\"attack_1\")
+		yield(get_tree().create_timer(0.2),\"timeout\")
+		anim_playback.travel(\"idle\")
+	pass
+
+
+func _on_blood_value_changed(value):
+	if value<=0:
+		emit_signal(\"die\")
+		anim_playback.travel(\"die\")
+		yield(get_tree().create_timer(1.4),\"timeout\")
+"
+
+[sub_resource type="VisualShaderNodeScalarOp" id=2]
+operator = 2
+
+[sub_resource type="VisualShaderNodeScalarOp" id=3]
+default_input_values = [ 0, 0.0, 1, 0.04 ]
+operator = 1
+
+[sub_resource type="VisualShaderNodeScalarOp" id=4]
+default_input_values = [ 0, 1.0, 1, 0.0 ]
+operator = 1
+
+[sub_resource type="VisualShaderNodeScalarFunc" id=5]
+function = 15
+
+[sub_resource type="VisualShaderNodeVectorOp" id=6]
+operator = 2
+
+[sub_resource type="VisualShaderNodeVectorOp" id=7]
+
+[sub_resource type="VisualShaderNodeColorUniform" id=8]
+uniform_name = "ColorUniform"
+
+[sub_resource type="VisualShaderNodeScalarUniform" id=9]
+uniform_name = "dissolverate"
+
+[sub_resource type="VisualShaderNodeTexture" id=10]
+source = 2
+
+[sub_resource type="OpenSimplexNoise" id=11]
+
+[sub_resource type="NoiseTexture" id=12]
+noise = SubResource( 11 )
+
+[sub_resource type="VisualShaderNodeTexture" id=13]
+texture = SubResource( 12 )
+
+[sub_resource type="VisualShaderNodeScalarOp" id=14]
+default_input_values = [ 0, 0.0, 1, 2.0 ]
+operator = 3
+
+[sub_resource type="VisualShaderNodeScalarOp" id=15]
+operator = 1
+
+[sub_resource type="VisualShaderNodeScalarFunc" id=16]
+function = 15
+
+[sub_resource type="VisualShader" id=17]
+code = "shader_type canvas_item;
+uniform sampler2D tex_frg_3;
+uniform float dissolverate;
+uniform vec4 ColorUniform : hint_color;
+
+
+
+void vertex() {
+// Output:0
+
+}
+
+void fragment() {
+// Texture:2
+	vec3 n_out2p0;
+	float n_out2p1;
+	{
+		vec4 _tex_read = texture(TEXTURE , UV.xy);
+		n_out2p0 = _tex_read.rgb;
+		n_out2p1 = _tex_read.a;
+	}
+
+// Texture:3
+	vec4 tex_frg_3_read = texture(tex_frg_3, UV.xy);
+	vec3 n_out3p0 = tex_frg_3_read.rgb;
+	float n_out3p1 = tex_frg_3_read.a;
+
+// ScalarUniform:18
+	float n_out18p0 = dissolverate;
+
+// ScalarOp:6
+	float n_in6p1 = 2.00000;
+	float n_out6p0 = n_out18p0 / n_in6p1;
+
+// ScalarOp:8
+	float n_out8p0 = dot(n_out3p0, vec3(0.333333, 0.333333, 0.333333)) - n_out6p0;
+
+// ScalarOp:11
+	float n_in11p1 = 0.04000;
+	float n_out11p0 = n_out8p0 - n_in11p1;
+
+// ScalarOp:12
+	float n_in12p0 = 1.00000;
+	float n_out12p0 = n_in12p0 - n_out11p0;
+
+// ScalarFunc:13
+	float n_out13p0 = round(n_out12p0);
+
+// ColorUniform:17
+	vec3 n_out17p0 = ColorUniform.rgb;
+	float n_out17p1 = ColorUniform.a;
+
+// VectorOp:15
+	vec3 n_out15p0 = vec3(n_out13p0) * n_out17p0;
+
+// VectorOp:16
+	vec3 n_out16p0 = n_out2p0 + n_out15p0;
+
+// ScalarFunc:9
+	float n_out9p0 = round(n_out8p0);
+
+// ScalarOp:10
+	float n_out10p0 = n_out2p1 * n_out9p0;
+
+// Output:0
+	COLOR.rgb = n_out16p0;
+	COLOR.a = n_out10p0;
+
+}
+
+void light() {
+// Output:0
+
+}
+"
+graph_offset = Vector2( 92.5792, 21.2437 )
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2( 1260, 120 )
+nodes/fragment/2/node = SubResource( 10 )
+nodes/fragment/2/position = Vector2( 116, 97 )
+nodes/fragment/3/node = SubResource( 13 )
+nodes/fragment/3/position = Vector2( 190, 267 )
+nodes/fragment/6/node = SubResource( 14 )
+nodes/fragment/6/position = Vector2( 420, 520 )
+nodes/fragment/8/node = SubResource( 15 )
+nodes/fragment/8/position = Vector2( 620, 380 )
+nodes/fragment/9/node = SubResource( 16 )
+nodes/fragment/9/position = Vector2( 420, 340 )
+nodes/fragment/10/node = SubResource( 2 )
+nodes/fragment/10/position = Vector2( 500, 200 )
+nodes/fragment/11/node = SubResource( 3 )
+nodes/fragment/11/position = Vector2( 620, 620 )
+nodes/fragment/12/node = SubResource( 4 )
+nodes/fragment/12/position = Vector2( 820, 620 )
+nodes/fragment/13/node = SubResource( 5 )
+nodes/fragment/13/position = Vector2( 980, 480 )
+nodes/fragment/15/node = SubResource( 6 )
+nodes/fragment/15/position = Vector2( 1180, 660 )
+nodes/fragment/16/node = SubResource( 7 )
+nodes/fragment/16/position = Vector2( 1000, 240 )
+nodes/fragment/17/node = SubResource( 8 )
+nodes/fragment/17/position = Vector2( 980, 680 )
+nodes/fragment/18/node = SubResource( 9 )
+nodes/fragment/18/position = Vector2( 240, 640 )
+nodes/fragment/connections = PoolIntArray( 3, 0, 8, 0, 6, 0, 8, 1, 8, 0, 9, 0, 2, 1, 10, 0, 9, 0, 10, 1, 10, 0, 0, 1, 11, 0, 12, 1, 12, 0, 13, 0, 13, 0, 15, 0, 8, 0, 11, 0, 2, 0, 16, 0, 15, 0, 16, 1, 16, 0, 0, 0, 17, 0, 15, 1, 18, 0, 6, 0 )
+
+[sub_resource type="ShaderMaterial" id=18]
+shader = SubResource( 17 )
+shader_param/dissolverate = -1.0
+shader_param/ColorUniform = Color( 0.729412, 0.431373, 0.0509804, 1 )
+
+[sub_resource type="RectangleShape2D" id=19]
+extents = Vector2( 134.78, 122.526 )
+
+[sub_resource type="Animation" id=20]
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("怪物图片:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -140.617, -127.401 ), Vector2( -200, -127.401 ), Vector2( -140.617, -127.401 ) ]
+}
+
+[sub_resource type="Animation" id=21]
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("怪物图片:material:shader_param/dissolverate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ -1.0, 1.0 ]
+}
+
+[sub_resource type="Animation" id=22]
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("怪物图片:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1, 1.5, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -140.617, -127.401 ), Vector2( -120, -127.401 ), Vector2( -140.617, -127.401 ), Vector2( -160, -127.401 ), Vector2( -140.617, -127.401 ) ]
+}
+
+[sub_resource type="AnimationNodeAnimation" id=23]
+animation = "attack_1"
+
+[sub_resource type="AnimationNodeAnimation" id=24]
+animation = "die"
+
+[sub_resource type="AnimationNodeAnimation" id=25]
+animation = "idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=26]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=27]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=28]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=29]
+
+[sub_resource type="AnimationNodeStateMachine" id=30]
+states/attack_1/node = SubResource( 23 )
+states/attack_1/position = Vector2( 610, 62 )
+states/die/node = SubResource( 24 )
+states/die/position = Vector2( 290, 173 )
+states/idle/node = SubResource( 25 )
+states/idle/position = Vector2( 290, 62 )
+transitions = [ "idle", "attack_1", SubResource( 26 ), "attack_1", "idle", SubResource( 27 ), "idle", "die", SubResource( 28 ), "die", "idle", SubResource( 29 ) ]
+start_node = "idle"
+graph_offset = Vector2( -127.01, 0 )
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=31]
+
+[node name="monster" type="Skeleton2D"]
+script = SubResource( 1 )
+
+[node name="怪物图片" type="TextureRect" parent="."]
+material = SubResource( 18 )
+margin_left = -146.081
+margin_top = -127.401
+margin_right = 138.919
+margin_bottom = 132.599
+texture = ExtResource( 1 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Area2D" type="Area2D" parent="."]
+z_index = 5
+
+[node name="blood" type="ProgressBar" parent="Area2D"]
+margin_left = -131.0
+margin_top = 136.0
+margin_right = 131.0
+margin_bottom = 159.0
+custom_colors/font_color = Color( 0.988235, 0.184314, 0.184314, 1 )
+step = 1.0
+value = 5.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="buff" type="HBoxContainer" parent="Area2D"]
+margin_left = -124.0
+margin_top = 170.0
+margin_right = 126.0
+margin_bottom = 250.0
+custom_constants/separation = 5
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 19 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/attack_1 = SubResource( 20 )
+anims/die = SubResource( 21 )
+anims/idle = SubResource( 22 )
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource( 30 )
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/playback = SubResource( 31 )
+
+[connection signal="value_changed" from="Area2D/blood" to="." method="_on_blood_value_changed"]

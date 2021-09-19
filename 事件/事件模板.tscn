@@ -1,0 +1,79 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://按钮/返回按钮.tscn" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+
+func initialization(data:Array):
+	#[0, 1, 打击, 攻击, 6, 造成6点伤害, 红色, 白色, 空, 0, 无, images\\1024Portraits\\red\\attack\\strike.png]
+	
+	#改牌的底色
+	
+	#名称
+	$\"名称\".text=data[2]
+	#类型
+	
+	#数值
+	
+	#描述
+	$\"描述\".text=data[5]
+	#牌色
+	
+	#品质
+	
+	#图片
+	$\"图片\".texture=load(\"res://素材/\"+data[11]);
+	#能量
+	$\"消耗\".text=data[1]
+	pass
+"
+
+[node name="模板" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="事件描述" type="Label" parent="."]
+margin_left = 526.0
+margin_top = 94.2761
+margin_right = 952.0
+margin_bottom = 326.276
+text = "111111111111111111111111111111111
+123
+12313
+1232
+12132
+12123
+123132
+1232"
+
+[node name="事件图片" type="ColorRect" parent="."]
+margin_left = 35.9955
+margin_top = 87.9413
+margin_right = 461.995
+margin_bottom = 473.941
+
+[node name="选择" type="VBoxContainer" parent="."]
+margin_left = 531.0
+margin_top = 268.0
+margin_right = 972.0
+margin_bottom = 472.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureButton" parent="选择" instance=ExtResource( 1 )]
+margin_right = 441.0
+margin_bottom = 73.0
+rect_scale = Vector2( 1, 1 )
+
+[node name="TextureButton2" parent="选择" instance=ExtResource( 1 )]
+margin_top = 77.0
+margin_right = 441.0
+margin_bottom = 150.0
+rect_scale = Vector2( 1, 1 )

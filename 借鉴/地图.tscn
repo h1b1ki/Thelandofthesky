@@ -1,0 +1,249 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://素材/images/ui/map/mapBot.png" type="Texture" id=1]
+[ext_resource path="res://素材/images/ui/map/mapTop.png" type="Texture" id=2]
+[ext_resource path="res://素材/images/ui/map/mapMid.png" type="Texture" id=3]
+[ext_resource path="res://脚本/拖动效果.gd" type="Script" id=4]
+[ext_resource path="res://地图节点/地图_敌人.tscn" type="PackedScene" id=5]
+[ext_resource path="res://地图节点/地图_事件.tscn" type="PackedScene" id=6]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+onready var drag=$drag #再命名,方便多次使用
+
+func _process(delta):
+	var draging=drag.draging
+	if draging:
+		$map.rect_position.y+=drag.distance.y
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Control
+
+export var Number_of_layers:int
+export var Nodes_of_each_layer_min:int
+export var Nodes_of_each_layer_max:int
+export var wide:int#每层的宽和高
+export var high:int
+export (Array,PackedScene) var node#地图的敌人(0)与事件(1)
+var test:Array #每层有几个节点,像[4, 3, 5，6]这样
+
+func _ready():
+	__Layercount()
+	__getLayernumber(test)
+	#每一个坐标创建一个节点
+	for y in test.size():
+		for x in test[y]:
+			var location=Get_locationmap(y,x)#获得坐标
+			#实例化
+			var point:Control=node[0].instance()#把敌人节点赋值给point
+			$node.add_child(point)#添加子节点
+			point.rect_position=location
+			
+			
+	Draw_line()
+#每层有几个节点,像[4, 3, 5，6]这样
+func __Layercount():
+	for x in range(0,Number_of_layers):
+		var rand=Tool.integers(Nodes_of_each_layer_min,Nodes_of_each_layer_max)
+		test.append(rand)
+		print(test)
+		
+#[[{上:0},{下:0}],[{上:0},{下:0}]]  每层随机连线总和
+func __getLayernumber(A:Array)->Array:
+	var backarray:Array=[]
+	for i in A.size()-1:
+		var getarray=__getnode(A[i],A[i+1])
+		backarray.append(getarray)
+	return backarray
+	
+#[{上:0},{下:0}]   上下两层随机连线
+func __getnode(one:int,two:int)->Array:
+	var A:int=0#上层已连线的索引
+	var B:int=0#下层已连线的索引   0~one-1
+	var backarray:Array=[]
+	#生成连线索引
+	for i in one:
+		if i==0:#下层第一个节点
+			backarray.append({\"down\":0,\"up\":0})
+			A=0;B=0;
+			#根据权重获得一个随机数	,看第一个节点有没有分支
+			var number=Tool.Weightnumber(2,50)
+			if number==2:
+				#连线操作
+				if A<two-1:
+					backarray.append({\"down\":0,\"up\":1})
+					A=1;B=0;
+				elif A==two-1:
+					backarray.append({\"down\":B,\"up\":two-1})
+				var number2=Tool.Weightnumber(3,200)
+				if number2==3:
+					#连线操作
+					if A<two-1:
+						backarray.append({\"down\":0,\"up\":2})
+						A=2;B=0;
+					elif A==two-1:
+						backarray.append({\"down\":B,\"up\":two-1})
+
+		elif i != 0:
+			B+=1;
+			if i==one-1:#下层最大索引
+				for x in two-A:
+					backarray.append({\"down\":one-1,\"up\":A+x})
+			else:
+				if A<two-1:
+					A+=1;
+					backarray.append({\"down\":B,\"up\":A})
+				#在其他节点也根据权重,看要不要分支
+				var number=Tool.Weightnumber(2,10)
+				if number==2:
+					#连线操作
+					if A<two-1:
+						A+=1;
+						if A<two-1:
+							backarray.append({\"down\":B,\"up\":A})
+						elif A==two-1:
+							backarray.append({\"down\":B,\"up\":two-1})
+					
+				else:
+					backarray.append({\"down\":B,\"up\":A})
+	return backarray
+#获得点在地图上的位置  第几层    第几个
+func Get_locationmap(layer:int,lndex:int)->Vector2:
+	var y=(Number_of_layers-layer)*high-150
+	var x=wide/test[layer]*lndex+100#test是每层有几个节点,像[4, 3, 5，6]这样
+	return Vector2(x,y)
+	
+func Draw_line():
+	var array=__getLayernumber(test)
+	for x in array.size():
+		for y in array[x]:#[{上:0},{下:0} {上:0},{下:0} {上:0},{下:0}]
+			var A#端点坐标
+			var B
+			A=Get_locationmap(x,y.down);
+			B=Get_locationmap(x+1,y.up);
+			var line=Line2D.new() 
+			$line.add_child(line)
+			line.points=[A,B]
+			pass
+"
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 237, 72, 1361, 1005 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 328, -4, 1267, 1047 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 321, 79, 1274, 936.689 )
+
+[node name="地图" type="Control"]
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 1929.0
+margin_bottom = 1089.0
+color = Color( 0.160784, 0.133333, 0.133333, 0.596078 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="drag" type="TextureButton" parent="."]
+margin_right = 1935.0
+margin_bottom = 1089.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="map" type="Control" parent="."]
+margin_left = 367.0
+margin_top = -1210.0
+margin_right = 1673.0
+margin_bottom = 1021.0
+rect_pivot_offset = Vector2( 0, -1000 )
+mouse_filter = 2
+script = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+Number_of_layers = 16
+Nodes_of_each_layer_min = 3
+Nodes_of_each_layer_max = 5
+wide = 1000
+high = 180
+node = [ ExtResource( 5 ), ExtResource( 6 ) ]
+
+[node name="mmap" type="Control" parent="map"]
+anchor_left = 0.028
+anchor_top = -1.001
+anchor_right = 0.028
+anchor_bottom = -1.001
+margin_left = -2.97327
+margin_top = 1548.49
+margin_right = 1269.02
+margin_bottom = 4520.49
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="top" type="TextureRect" parent="map/mmap"]
+margin_left = -90.5098
+margin_top = 16.9706
+margin_right = 1270.49
+margin_bottom = 1021.97
+mouse_filter = 2
+texture = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="mid" type="TextureRect" parent="map/mmap"]
+margin_top = 1009.0
+margin_right = 1361.0
+margin_bottom = 2056.0
+mouse_filter = 2
+texture = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bot" type="TextureRect" parent="map/mmap"]
+margin_left = -4.23792
+margin_top = 2053.64
+margin_right = 1356.76
+margin_bottom = 2989.64
+mouse_filter = 2
+texture = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="node" type="Control" parent="map"]
+margin_left = 46.6165
+margin_top = -635.678
+margin_right = 46.6165
+margin_bottom = -635.678
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="line" type="Control" parent="map"]
+margin_left = 46.616
+margin_top = -648.014
+margin_right = 86.616
+margin_bottom = -608.014
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -1,0 +1,164 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://素材/images/ui/timerIcon.png" type="Texture" id=1]
+[ext_resource path="res://素材/images/ui/topPanel/settings.png" type="Texture" id=2]
+[ext_resource path="res://素材/images/ui/topPanel/deck.png" type="Texture" id=3]
+[ext_resource path="res://素材/images/ui/topPanel/map.png" type="Texture" id=4]
+[ext_resource path="res://素材/images/ui/topPanel/bar.png" type="Texture" id=5]
+[ext_resource path="res://素材/images/ui/topPanel/panelHeart.png" type="Texture" id=6]
+[ext_resource path="res://素材/images/ui/topPanel/gold.png" type="Texture" id=7]
+[ext_resource path="res://素材/font/zht/NotoSansCJKtc-Regular.otf" type="DynamicFontData" id=8]
+[ext_resource path="res://地图.tscn" type="PackedScene" id=9]
+
+[sub_resource type="Animation" id=1]
+resource_name = "地图弹出"
+tracks/0/type = "value"
+tracks/0/path = NodePath("地图:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -1200 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "地图退出"
+tracks/0/type = "value"
+tracks/0/path = NodePath("地图:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, -1200 ) ]
+}
+
+[sub_resource type="DynamicFont" id=3]
+size = 40
+font_data = ExtResource( 8 )
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends TextureButton
+
+var ashow:bool=false
+
+
+
+
+func _on__pressed():
+	if ashow==false:	
+		print('123')
+		ashow=true
+		$\"../地图弹出\".play(\"地图弹出\")
+		
+	elif ashow==true:
+		print('24312421')
+		ashow=false
+		$\"../地图弹出\".play(\"地图退出\")
+	pass # Replace with function body.
+"
+
+[node name="抬头栏" type="TextureRect"]
+anchor_right = 1.003
+anchor_bottom = 0.119
+margin_left = 5.0
+margin_top = 1.0
+margin_right = -0.76001
+margin_bottom = 0.479996
+texture = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="地图" parent="." instance=ExtResource( 9 )]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 0.073
+margin_top = -1200.0
+margin_right = 10.0
+margin_bottom = -197.84
+
+[node name="地图弹出" type="AnimationPlayer" parent="."]
+"anims/地图弹出" = SubResource( 1 )
+"anims/地图退出" = SubResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 1.0
+margin_top = 8.22748
+margin_right = 247.0
+margin_bottom = 68.2275
+custom_fonts/font = SubResource( 3 )
+text = "战士 80/80 99"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_left = 292.979
+margin_top = 8.25166
+margin_right = 356.979
+margin_bottom = 72.2517
+texture = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+margin_left = 545.889
+margin_top = 6.84584
+margin_right = 609.889
+margin_bottom = 70.8458
+texture = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect3" type="TextureRect" parent="."]
+margin_left = 385.006
+margin_top = 4.57498
+margin_right = 449.006
+margin_bottom = 68.575
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="地图图标" type="TextureButton" parent="."]
+margin_left = 1688.2
+margin_top = 2.42771
+margin_right = 1752.2
+margin_bottom = 66.4277
+texture_normal = ExtResource( 4 )
+script = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="牌组" type="TextureButton" parent="."]
+margin_left = 1765.2
+margin_top = -0.747101
+margin_right = 1829.2
+margin_bottom = 63.2529
+texture_normal = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="设定" type="TextureButton" parent="."]
+margin_left = 1834.25
+margin_top = -3.9219
+margin_right = 1898.25
+margin_bottom = 60.0781
+texture_normal = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="地图图标" to="地图图标" method="_on__pressed"]

@@ -1,0 +1,120 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://zhs/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+var A:int
+var B:int
+#
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+#	if Tool.integers(0,1)==0:
+#		print(Tool.integers(0,1))
+#		A=6
+#		B=7
+#		print(A,B)
+#	if Tool.integers(0,1)==1:
+#		A=8
+#		B=9
+#		print(A,B)
+	pass # Replace with function body.
+
+
+
+
+func _on_Button_button_down():
+	#$\"Node\".rs()
+	get_tree().change_scene(\"res://test/test1.tscn\")
+	pass # Replace with function body.
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+var hit_frequency:int
+var hit:int
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	hit=5
+	print(hit)
+	hit*=1.5
+	print(hit)
+	pass # Replace with function body.
+
+func rs():
+	var m=Tool.integers(0,1)
+	match m:
+		1:
+			hit=2
+		0:	
+			hit_frequency=3
+	print(hit,hit_frequency)
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[sub_resource type="DynamicFont" id=3]
+size = 100
+font_data = ExtResource( 1 )
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Label
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	$Tween.interpolate_property(self, \"text\",
+			\"1\", \"2\",
+			2, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.start()
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[node name="Node2D" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="Button" type="Button" parent="."]
+margin_left = 416.0
+margin_top = 254.0
+margin_right = 1006.0
+margin_bottom = 500.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Node" type="Node" parent="."]
+script = SubResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 277.647
+margin_top = 137.488
+margin_right = 715.646
+margin_bottom = 358.488
+custom_fonts/font = SubResource( 3 )
+text = "1"
+script = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="Label"]
+
+[connection signal="button_down" from="Button" to="." method="_on_Button_button_down"]

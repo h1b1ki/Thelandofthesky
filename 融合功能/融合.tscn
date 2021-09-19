@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://zhs/SourceHanSerifSC-Medium.otf" type="DynamicFontData" id=1]
+
+[sub_resource type="DynamicFont" id=1]
+size = 50
+font_data = ExtResource( 1 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 1024.0
+margin_bottom = 600.0
+color = Color( 0.2, 0.164706, 0.164706, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 432.977
+margin_top = 10.6908
+margin_right = 582.977
+margin_bottom = 83.6908
+custom_fonts/font = SubResource( 1 )
+text = "融合！"
+
+[node name="CheckButton2" type="Button" parent="."]
+margin_left = 791.118
+margin_top = 208.47
+margin_right = 867.118
+margin_bottom = 248.47
+text = "111"
+
+[node name="CheckButton" type="Button" parent="."]
+margin_left = 236.979
+margin_top = 209.361
+margin_right = 312.979
+margin_bottom = 249.361
+text = "111"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckButton3" type="Button" parent="."]
+margin_left = 497.121
+margin_top = 209.361
+margin_right = 573.121
+margin_bottom = 249.361
+text = "3333"

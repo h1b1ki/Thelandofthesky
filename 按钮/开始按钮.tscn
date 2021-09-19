@@ -1,0 +1,57 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://素材/font/zht/NotoSansCJKtc-Regular.otf" type="DynamicFontData" id=1]
+[ext_resource path="res://素材/images/ui/topPanel/confirmButton.png" type="Texture" id=2]
+[ext_resource path="res://按钮/开始按钮.gd" type="Script" id=3]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 240.934, 35.285, 270.066, 71.715 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 30
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=3]
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.08, 1.08 ), Vector2( 1, 1 ) ]
+}
+
+[node name="TextureButton" type="TextureButton"]
+margin_right = 272.0
+margin_bottom = 73.0
+rect_scale = Vector2( 1.05313, 1.05313 )
+texture_normal = SubResource( 1 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 118.957
+margin_top = 9.06843
+margin_right = 186.957
+margin_bottom = 54.0684
+custom_fonts/font = SubResource( 2 )
+text = "启程"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "闪烁"
+"anims/闪烁" = SubResource( 3 )
+
+[connection signal="button_down" from="." to="." method="_on_TextureButton_button_down"]

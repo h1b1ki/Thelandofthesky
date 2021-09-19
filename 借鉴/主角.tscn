@@ -1,0 +1,124 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://素材/images/characters/ironclad/idle/ironclad.png" type="Texture" id=1]
+
+[node name="主角" type="Node2D"]
+
+[node name="战士" type="Node2D" parent="."]
+
+[node name="ironclad3" type="Sprite" parent="战士"]
+position = Vector2( 937.626, 816.449 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 139, 79, 301, 30 )
+
+[node name="ironclad4" type="Sprite" parent="战士"]
+position = Vector2( 984.468, 741.248 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 4, 29, 128, 79 )
+
+[node name="ironclad2" type="Sprite" parent="战士"]
+position = Vector2( 994.109, 676.505 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 446, 16, 92, 93 )
+
+[node name="ironclad6" type="Sprite" parent="战士"]
+position = Vector2( 933.897, 789.073 )
+rotation = 1.5454
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 544, 13, 59, 42 )
+
+[node name="ironclad7" type="Sprite" parent="战士"]
+position = Vector2( 1038.04, 785.826 )
+rotation = 1.93372
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 544, 62, 63, 46 )
+
+[node name="ironclad8" type="Sprite" parent="战士"]
+position = Vector2( 983.043, 626.713 )
+rotation = 0.930266
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 213, 15, 42, 26 )
+
+[node name="ironclad" type="Sprite" parent="战士"]
+position = Vector2( -702.436, 6.28711 )
+texture = ExtResource( 1 )
+offset = Vector2( 1690.09, 609.811 )
+region_enabled = true
+region_rect = Rect2( 382, 30, 47, 42 )
+
+[node name="ironclad10" type="Sprite" parent="战士"]
+position = Vector2( 1036.5, 693.418 )
+rotation = -2.71398
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 329, 12, 29, 29 )
+
+[node name="ironclad11" type="Sprite" parent="战士"]
+position = Vector2( 939.278, 689.553 )
+rotation = 1.0345
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 171, 4, 36, 36 )
+
+[node name="ironclad12" type="Sprite" parent="战士"]
+position = Vector2( 957.413, 652.39 )
+rotation = 1.12835
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 294, 9, 29, 32 )
+
+[node name="ironclad13" type="Sprite" parent="战士"]
+position = Vector2( 1028.17, 658.336 )
+rotation = 2.08242
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 261, 6, 27, 35 )
+
+[node name="ironclad14" type="Sprite" parent="战士"]
+position = Vector2( 995.604, 620.655 )
+rotation = 1.65376
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 150, 7, 14, 17 )
+
+[node name="ironclad17" type="Sprite" parent="战士"]
+position = Vector2( 1038.58, 697.282 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 5, 7, 25, 16 )
+
+[node name="ironclad18" type="Sprite" parent="战士"]
+position = Vector2( 939.575, 699.661 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 36, 7, 26, 15 )
+
+[node name="ironclad19" type="Sprite" parent="战士"]
+position = Vector2( 1036.2, 698.769 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 68, 8, 24, 15 )
+
+[node name="ironclad20" type="Sprite" parent="战士"]
+position = Vector2( 914.008, 683.904 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 99, 5, 16, 18 )
+
+[node name="ironclad5" type="Sprite" parent="战士"]
+position = Vector2( 913.578, 686.146 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 138, 47, 238, 25 )
+
+[node name="ironclad9" type="Sprite" parent="战士"]
+position = Vector2( 1024.9, 688.363 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 124, 9, 19, 14 )

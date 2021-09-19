@@ -1,0 +1,119 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://zhs/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://素材/images/ui/run_mods/brewmaster.png" type="Texture" id=2]
+[ext_resource path="res://素材/images/ui/reward/rewardListItemPanel.png" type="Texture" id=3]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends TextureButton
+
+export var type:String
+export var value:int
+signal card
+#ka qian cheng    jipan rhes
+func initialization(data:Array):
+	if data[0]=='ka':
+		type='ka'
+		$tu.texture=load(\"res://素材/images/ui/reward/normalCardReward.png\")
+	elif data[0]=='qian':
+		type='qian'
+		value=data[1]
+		$tu.texture=load(\"res://素材/images/ui/topPanel/gold.png\")
+	elif data[0]=='cheng':
+		type='cheng'
+		$tu.texture=load(\"res://素材/images/ui/topPanel/ascension.png\")
+	elif data[0]=='jipan':
+		type='jipan'
+		$tu.texture=load(\"res://素材/images/ui/topPanel/panelHeart.png\")
+	elif data[0]=='rhs':
+		type='rhs'
+		$tu.texture=load(\"res://素材/images/ui/topPanel/panel_heart_white.png\")
+	if data[1]!=0:
+		$tu/zhi.text=str(data[1])
+	if data[1]==0:
+		$tu/zhi.text=''
+
+
+
+
+func _on__button_down():
+	if type=='qian':
+		Game.money+=value
+		self.queue_free()
+	if type=='cheng':
+		Game.dust+=value
+		self.queue_free()
+	if type=='ka':
+		print(\"sss\")
+		emit_signal(\"card\")
+		self.queue_free()
+#		var interval=1.0/(Game.reward_number-1)
+#		var y=0
+#		for x in Game.reward_cards:
+#			var P=PathFollow2D.new()
+#			$\"Path2D\".add_child(P)
+#			P.unit_offset=y*interval
+#			print(interval)
+#			x.rect_scale=Vector2(0,0)
+#			P.add_child(x)
+#			x.connect(\"button_down\",self,\"button_down\",[x])
+#			x.connect(\"mouse_entered\",self,\"a\")
+#			#$Tween.interpolate_property(x,\"global_position\",Vector2(960,540),P.global_position,0.5,Tween.TRANS_LINEAR);
+#			$Tween.interpolate_property(x,\"rect_scale\",Vector2(0.1,0.1),Vector2(1,1),0.5,Tween.TRANS_LINEAR);
+#			$Tween.start()
+#			x.show_on_top
+#			y+=1
+#
+#func button_down(card):
+#	Game.cards.append(card)
+#	self.queue_free()
+#func a():
+#	print('a')
+"
+
+[sub_resource type="DynamicFont" id=2]
+size = 20
+font_data = ExtResource( 1 )
+
+[sub_resource type="Curve2D" id=3]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -111.286, 257.383, 0, 0, 0, 0, 427.495, 257.383, 0, 0, 0, 0, 961.787, 259.628 )
+}
+
+[node name="获得奖励" type="TextureButton"]
+margin_left = 534.0
+margin_top = 316.0
+margin_right = 998.0
+margin_bottom = 416.0
+rect_min_size = Vector2( 0, 100 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 3 )
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="tu" type="Sprite" parent="."]
+position = Vector2( 100.52, 49.3884 )
+scale = Vector2( 3.34297, 2.47323 )
+texture = ExtResource( 2 )
+
+[node name="zhi" type="Label" parent="tu"]
+margin_left = 38.0
+margin_top = -13.0
+margin_right = 80.0
+margin_bottom = 12.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.580392, 0.439216, 0.439216, 1 )
+text = "111"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource( 3 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[connection signal="button_down" from="." to="." method="_on__button_down"]
