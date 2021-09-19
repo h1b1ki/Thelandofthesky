@@ -1,0 +1,69 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://素材/font/zht/NotoSansCJKtc-Regular.otf" type="DynamicFontData" id=1]
+[ext_resource path="res://素材/images/ui/mainMenu/menuPanel2.png" type="Texture" id=2]
+[ext_resource path="res://素材/images/ui/mainMenu/portrait/standard.jpg" type="Texture" id=3]
+[ext_resource path="res://按钮.gd" type="Script" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 30
+font_data = ExtResource( 1 )
+
+[node name="按钮" type="Container"]
+margin_right = 240.0
+margin_bottom = 430.0
+rect_min_size = Vector2( 240, 430 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="menuPanel2" type="TextureRect" parent="."]
+margin_left = -32.9633
+margin_top = -26.727
+margin_right = 479.037
+margin_bottom = 773.273
+rect_scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="standard" type="TextureRect" parent="menuPanel2"]
+margin_left = 99.7645
+margin_top = 155.778
+margin_right = 416.764
+margin_bottom = 361.778
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="menuPanel2"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -38.1971
+margin_top = 72.96
+margin_right = 101.803
+margin_bottom = 125.96
+custom_fonts/font = SubResource( 1 )
+text = "标准"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="menuPanel2"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -68.3093
+margin_top = 443.877
+margin_right = 431.691
+margin_bottom = 664.877
+custom_fonts/font = SubResource( 1 )
+text = "开始杀戮"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="mouse_entered" from="." to="." method="_on__mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on__mouse_exited"]

@@ -1,0 +1,271 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://素材/images/characters/ironclad/idle/ironclad.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+onready var anim_playback=$AnimationTree[\"parameters/playback\"]
+
+signal blood
+
+func _ready():
+	pass # Replace with function body.
+
+
+func anim(attack:bool):
+	if attack:
+		anim_playback.travel(\"attack\")
+		yield(get_tree().create_timer(0.5),\"timeout\")
+		anim_playback.travel(\"idle\")
+	else:
+		anim_playback.travel(\"hurt\")
+		yield(get_tree().create_timer(0.5),\"timeout\")
+		anim_playback.travel(\"idle\")
+
+
+func _on_blood_value_changed(value):
+	emit_signal(\"blood\",value)
+	pass # Replace with function body.
+"
+
+[sub_resource type="Animation" id=2]
+resource_name = "attack"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("战士:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 100, 0 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "hurt"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("战士:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( -200, 0 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "idle"
+length = 0.8
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("战士/ironclad5:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 20.0, 0.0, -20.0, 0.0 ]
+}
+
+[sub_resource type="AnimationNodeAnimation" id=5]
+animation = "attack"
+
+[sub_resource type="AnimationNodeAnimation" id=6]
+animation = "hurt"
+
+[sub_resource type="AnimationNodeAnimation" id=7]
+animation = "idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=8]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=9]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=10]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=11]
+
+[sub_resource type="AnimationNodeStateMachine" id=12]
+states/attack/node = SubResource( 5 )
+states/attack/position = Vector2( 168.969, 54 )
+states/hurt/node = SubResource( 6 )
+states/hurt/position = Vector2( 24.9689, 184 )
+states/idle/node = SubResource( 7 )
+states/idle/position = Vector2( -91.0311, 54 )
+transitions = [ "idle", "attack", SubResource( 8 ), "attack", "idle", SubResource( 9 ), "hurt", "idle", SubResource( 10 ), "idle", "hurt", SubResource( 11 ) ]
+start_node = "idle"
+graph_offset = Vector2( -352.031, 0 )
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=13]
+
+[node name="主角" type="Node2D"]
+position = Vector2( 931.713, 602.082 )
+script = SubResource( 1 )
+
+[node name="战士" type="Node2D" parent="."]
+
+[node name="ironclad3" type="Sprite" parent="战士"]
+position = Vector2( -54.6317, 100.005 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 139, 79, 301, 30 )
+
+[node name="ironclad4" type="Sprite" parent="战士"]
+position = Vector2( -7.78967, 24.8042 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 4, 29, 128, 79 )
+
+[node name="ironclad2" type="Sprite" parent="战士"]
+position = Vector2( 1.85132, -39.9388 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 446, 16, 92, 93 )
+
+[node name="ironclad6" type="Sprite" parent="战士"]
+position = Vector2( -58.3607, 72.6292 )
+rotation = 1.5454
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 544, 13, 59, 42 )
+
+[node name="ironclad7" type="Sprite" parent="战士"]
+position = Vector2( 45.7823, 69.3822 )
+rotation = 1.93372
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 544, 62, 63, 46 )
+
+[node name="ironclad8" type="Sprite" parent="战士"]
+position = Vector2( -9.21466, -89.7308 )
+rotation = 0.930266
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 213, 15, 42, 26 )
+
+[node name="ironclad" type="Sprite" parent="战士"]
+position = Vector2( -1694.69, -710.157 )
+texture = ExtResource( 1 )
+offset = Vector2( 1690.09, 609.811 )
+region_enabled = true
+region_rect = Rect2( 382, 30, 47, 42 )
+
+[node name="ironclad10" type="Sprite" parent="战士"]
+position = Vector2( 44.2423, -23.0258 )
+rotation = -2.71398
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 329, 12, 29, 29 )
+
+[node name="ironclad11" type="Sprite" parent="战士"]
+position = Vector2( -52.9797, -26.8908 )
+rotation = 1.0345
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 171, 4, 36, 36 )
+
+[node name="ironclad12" type="Sprite" parent="战士"]
+position = Vector2( -34.8447, -64.0538 )
+rotation = 1.12835
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 294, 9, 29, 32 )
+
+[node name="ironclad13" type="Sprite" parent="战士"]
+position = Vector2( 35.9124, -58.1078 )
+rotation = 2.08242
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 261, 6, 27, 35 )
+
+[node name="ironclad14" type="Sprite" parent="战士"]
+position = Vector2( 3.34631, -95.7888 )
+rotation = 1.65376
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 150, 7, 14, 17 )
+
+[node name="ironclad17" type="Sprite" parent="战士"]
+position = Vector2( 46.3223, -19.1618 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 5, 7, 25, 16 )
+
+[node name="ironclad18" type="Sprite" parent="战士"]
+position = Vector2( -52.6827, -16.7828 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 36, 7, 26, 15 )
+
+[node name="ironclad19" type="Sprite" parent="战士"]
+position = Vector2( 43.9423, -17.6748 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 68, 8, 24, 15 )
+
+[node name="ironclad20" type="Sprite" parent="战士"]
+position = Vector2( -78.2497, -32.5398 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 99, 5, 16, 18 )
+
+[node name="ironclad5" type="Sprite" parent="战士"]
+position = Vector2( -78.6797, -30.2978 )
+rotation = -0.0664994
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 138, 47, 238, 25 )
+
+[node name="ironclad9" type="Sprite" parent="战士"]
+position = Vector2( 32.6423, -28.0808 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 124, 9, 19, 14 )
+
+[node name="blood" type="ProgressBar" parent="."]
+margin_left = -138.146
+margin_top = 120.347
+margin_right = 123.852
+margin_bottom = 143.347
+mouse_filter = 2
+custom_colors/font_color = Color( 0.988235, 0.184314, 0.184314, 1 )
+step = 1.0
+value = 96.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="buff" type="HBoxContainer" parent="."]
+margin_left = -148.742
+margin_top = 119.948
+margin_right = 101.262
+margin_bottom = 199.948
+mouse_filter = 2
+custom_constants/separation = 5
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/attack = SubResource( 2 )
+anims/hurt = SubResource( 3 )
+anims/idle = SubResource( 4 )
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource( 12 )
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/playback = SubResource( 13 )
+
+[connection signal="value_changed" from="blood" to="." method="_on_blood_value_changed"]

@@ -1,0 +1,205 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://素材/images/ui/timerIcon.png" type="Texture" id=1]
+[ext_resource path="res://素材/images/ui/topPanel/settings.png" type="Texture" id=2]
+[ext_resource path="res://素材/images/ui/topPanel/deck.png" type="Texture" id=3]
+[ext_resource path="res://素材/images/ui/topPanel/map.png" type="Texture" id=4]
+[ext_resource path="res://素材/images/ui/topPanel/bar.png" type="Texture" id=5]
+[ext_resource path="res://素材/images/ui/topPanel/panelHeart.png" type="Texture" id=6]
+[ext_resource path="res://素材/images/ui/topPanel/gold.png" type="Texture" id=7]
+[ext_resource path="res://素材/font/zht/NotoSansCJKtc-Regular.otf" type="DynamicFontData" id=8]
+[ext_resource path="res://地图.tscn" type="PackedScene" id=9]
+[ext_resource path="res://战斗相关/牌组.tscn" type="PackedScene" id=10]
+[ext_resource path="res://zhs/Xolonium-Regular.ttf" type="DynamicFontData" id=11]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends TextureRect
+
+func _ready():
+	$\"心/health\".text=\"100/100\"
+	pass # Replace with function body.
+"
+
+[sub_resource type="Animation" id=2]
+tracks/0/type = "value"
+tracks/0/path = NodePath("地图:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -1200 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+tracks/0/type = "value"
+tracks/0/path = NodePath("地图:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, -1200 ) ]
+}
+
+[sub_resource type="DynamicFont" id=4]
+size = 40
+font_data = ExtResource( 8 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 50
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 50
+font_data = ExtResource( 11 )
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends TextureButton
+
+var ashow:bool=false
+
+
+
+
+func _on__pressed():
+	if ashow==false:	
+		print('123')
+		ashow=true
+		$\"../地图弹出\".play(\"地图弹出\")
+		
+	elif ashow==true:
+		print('24312421')
+		ashow=false
+		$\"../地图弹出\".play(\"地图退出\")
+	pass # Replace with function body.
+"
+
+[node name="抬头栏" type="TextureRect"]
+anchor_right = 1.003
+anchor_bottom = 0.119
+margin_right = -5.76001
+margin_bottom = -20.52
+texture = ExtResource( 5 )
+expand = true
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="地图" parent="." instance=ExtResource( 9 )]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 0.073
+margin_top = -1200.0
+margin_bottom = -127.884
+mouse_filter = 2
+
+[node name="牌组" parent="." instance=ExtResource( 10 )]
+margin_top = -1080.0
+margin_bottom = -108.0
+
+[node name="地图弹出" type="AnimationPlayer" parent="."]
+"anims/地图弹出" = SubResource( 2 )
+"anims/地图退出" = SubResource( 3 )
+
+[node name="角色名" type="Label" parent="."]
+margin_left = 1.0
+margin_top = 8.0
+margin_right = 81.0
+margin_bottom = 68.0
+custom_fonts/font = SubResource( 4 )
+text = "战士"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="钱" type="TextureRect" parent="."]
+margin_left = 440.905
+margin_top = 0.813031
+margin_right = 504.905
+margin_bottom = 64.8131
+texture = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="money" type="Label" parent="钱"]
+margin_left = 62.0
+margin_right = 178.0
+margin_bottom = 61.0
+custom_fonts/font = SubResource( 5 )
+text = "1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="心" type="TextureRect" parent="."]
+margin_left = 147.081
+margin_top = 8.26006
+margin_right = 211.081
+margin_bottom = 72.2601
+texture = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="health" type="Label" parent="心"]
+margin_left = 56.5686
+margin_top = -7.07108
+margin_right = 167.569
+margin_bottom = 53.9289
+custom_fonts/font = SubResource( 6 )
+text = "1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="时间" type="TextureRect" parent="."]
+margin_left = 612.694
+margin_top = 0.332335
+margin_right = 676.694
+margin_bottom = 64.3324
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="地图图标" type="TextureButton" parent="."]
+margin_left = 1688.2
+margin_top = 2.42771
+margin_right = 1752.2
+margin_bottom = 66.4277
+texture_normal = ExtResource( 4 )
+script = SubResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="牌组图标" type="TextureButton" parent="."]
+margin_left = 1765.2
+margin_top = -0.747101
+margin_right = 1829.2
+margin_bottom = 63.2529
+texture_normal = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="设定" type="TextureButton" parent="."]
+margin_left = 1834.25
+margin_top = -3.9219
+margin_right = 1898.25
+margin_bottom = 60.0781
+texture_normal = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="地图图标" to="地图图标" method="_on__pressed"]

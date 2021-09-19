@@ -1,0 +1,38 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://背景.tscn" type="PackedScene" id=1]
+[ext_resource path="res://主角.tscn" type="PackedScene" id=3]
+[ext_resource path="res://抬头栏.tscn" type="PackedScene" id=5]
+[ext_resource path="res://战斗相关/对战手牌.tscn" type="PackedScene" id=6]
+[ext_resource path="res://人物/敌人/first_floor/触手怪.tscn" type="PackedScene" id=7]
+[ext_resource path="res://对战.gd" type="Script" id=8]
+[ext_resource path="res://战斗相关/伤害飘字.tscn" type="PackedScene" id=9]
+[ext_resource path="res://战斗相关/箭头.tscn" type="PackedScene" id=13]
+
+[node name="对战" type="Node2D"]
+script = ExtResource( 8 )
+
+[node name="背景" parent="." instance=ExtResource( 1 )]
+z_index = -9
+
+[node name="主角" parent="." instance=ExtResource( 3 )]
+position = Vector2( 396.659, 649.02 )
+
+[node name="游戏发牌功能" parent="." instance=ExtResource( 6 )]
+
+[node name="抬头栏" parent="." instance=ExtResource( 5 )]
+margin_right = 1920.0
+margin_bottom = 108.0
+
+[node name="Node2D" parent="." instance=ExtResource( 7 )]
+position = Vector2( 1688.16, 1231.54 )
+
+[node name="箭头" parent="." instance=ExtResource( 13 )]
+visible = false
+
+[node name="伤害飘字" parent="." instance=ExtResource( 9 )]
+position = Vector2( 818.175, 749.201 )
+z_index = 10
+
+[connection signal="round_end" from="游戏发牌功能" to="." method="_on__round_end"]
+[connection signal="attack" from="箭头" to="." method="_on__attack"]

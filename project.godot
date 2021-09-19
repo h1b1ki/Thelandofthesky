@@ -1,0 +1,64 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "TextureButton",
+"class": "drag",
+"language": "GDScript",
+"path": "res://脚本/拖动效果.gd"
+} ]
+_global_script_class_icons={
+"drag": ""
+}
+
+[application]
+
+config/name="Slaythespire 1 . 0"
+run/main_scene="res://标题.tscn"
+
+[autoload]
+
+doBuff="*res://脚本/buff.gd"
+BuffDatabase="*res://卡牌数据库/buff_database.gd"
+CardDatabase="*res://卡牌数据库/card_database.gd"
+Game="*res://脚本/GAME.gd"
+Tool="*res://脚本/Tool.gd"
+MonsterDatabase="*res://卡牌数据库/monster_database.gd"
+EventDatabase="*res://卡牌数据库/event_database.gd"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/size/test_width=1280
+window/size/test_height=720
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
+
+[global]
+
+w=false
+
+[input]
+
+"左键按下"={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+"右键按下"={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":2,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
+[physics]
+
+common/enable_pause_aware_picking=true

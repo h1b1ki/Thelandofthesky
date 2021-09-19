@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://素材/images/npcs/neow/skeleton.png" type="Texture" id=1]
+
+[node name="NPC" type="Node2D"]
+
+[node name="鱼" type="Node2D" parent="."]
+
+[node name="skeleton3" type="Sprite" parent="鱼"]
+position = Vector2( 937.583, 706.609 )
+rotation = 1.57628
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 782, 199, 92, 608 )
+
+[node name="skeleton2" type="Sprite" parent="鱼"]
+position = Vector2( 975.68, 720.895 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( -13, -8, 752, 204 )
+
+[node name="skeleton" type="Sprite" parent="鱼"]
+position = Vector2( 959.806, 443.1 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 2, 199, 780, 608 )
