@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://zhs/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
+
+[sub_resource type="DynamicFont" id=1]
+size = 70
+outline_size = 1
+font_data = ExtResource( 1 )
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Label
+
+func show_value(value, travel, duration, spread, crit=false):
+	text = value
+	var movement = travel.rotated(rand_range(-spread/2, spread/2))
+	rect_pivot_offset = rect_size / 2
+	$Tween.interpolate_property(self, \"rect_position\",
+			rect_position, rect_position + movement,
+			duration, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.interpolate_property(self, \"modulate:a\",
+			1.0, 0.0, duration,
+			Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	if crit:
+		modulate = Color(1, 0, 0)
+		$Tween.interpolate_property(self, \"rect_scale\",
+			rect_scale*2, rect_scale,
+			0.4, Tween.TRANS_BACK, Tween.EASE_IN)
+	$Tween.start()
+	yield($Tween, \"tween_all_completed\")
+	queue_free()
+"
+
+[node name="伤害飘字" type="Label"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -30.0
+margin_top = -17.5
+margin_right = 30.0
+margin_bottom = 17.5
+custom_fonts/font = SubResource( 1 )
+text = "132"
+script = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="."]

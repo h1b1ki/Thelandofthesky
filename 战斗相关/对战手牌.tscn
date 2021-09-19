@@ -1,0 +1,255 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://战斗相关/抽卡堆.tscn" type="PackedScene" id=1]
+[ext_resource path="res://素材/images/ui/discardButton/shadow.png" type="Texture" id=2]
+[ext_resource path="res://素材/images/ui/deckButton/shadow.png" type="Texture" id=3]
+[ext_resource path="res://素材/images/ui/deckButton/base.png" type="Texture" id=4]
+[ext_resource path="res://素材/images/ui/discardButton/base.png" type="Texture" id=5]
+[ext_resource path="res://素材/images/ui/topPanel/endTurnButtonGlow.png" type="Texture" id=6]
+[ext_resource path="res://素材/images/ui/topPanel/endTurnButton.png" type="Texture" id=7]
+[ext_resource path="res://素材/images/ui/topPanel/endTurnHover.png" type="Texture" id=8]
+[ext_resource path="res://zhs/SourceHanSerifSC-Medium.otf" type="DynamicFontData" id=9]
+[ext_resource path="res://战斗相关/牌库.gd" type="Script" id=10]
+[ext_resource path="res://战斗相关/手牌.gd" type="Script" id=11]
+[ext_resource path="res://战斗相关/对战手牌.gd" type="Script" id=12]
+[ext_resource path="res://战斗相关/弃卡堆.tscn" type="PackedScene" id=14]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 231.801, 1062.35, -584.824, 2.11893, 584.824, -2.11893, 960.711, 933.093, 0, 0, 0, 0, 1681.15, 1053.87 )
+}
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Control
+
+var Discard=[]
+
+func _ready():
+	
+	pass # Replace with function body.
+#
+func discard(card):
+	Discard.append(card)
+	pass
+func card_refresh():
+	for x in Discard:
+		x.refresh()
+"
+
+[sub_resource type="DynamicFont" id=3]
+font_data = ExtResource( 9 )
+
+[sub_resource type="Animation" id=4]
+resource_name = "开始"
+tracks/0/type = "value"
+tracks/0/path = NodePath("牌库:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -500, 0 ), Vector2( 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("弃牌堆:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 500, 0 ), Vector2( 0, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("回合结束:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("回合结束:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "结束"
+tracks/0/type = "value"
+tracks/0/path = NodePath("牌库:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( -500, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("弃牌堆:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 500, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("回合结束:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("手牌:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 14, -2 ), Vector2( 14, 1000 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("回合结束:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.01 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[node name="游戏发牌功能" type="Node2D"]
+script = ExtResource( 12 )
+
+[node name="手牌" type="Node2D" parent="."]
+position = Vector2( 14, -2 )
+script = ExtResource( 11 )
+
+[node name="Path2D" type="Path2D" parent="手牌"]
+position = Vector2( -2, 26 )
+curve = SubResource( 1 )
+
+[node name="Tween" type="Tween" parent="手牌"]
+
+[node name="牌库" type="Control" parent="."]
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="base2" type="TextureButton" parent="牌库"]
+margin_left = 90.4121
+margin_top = 850.36
+margin_right = 218.412
+margin_bottom = 978.36
+texture_normal = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="shadow" type="Sprite" parent="牌库"]
+position = Vector2( 152.298, 927.205 )
+texture = ExtResource( 3 )
+
+[node name="抽卡堆" parent="牌库" instance=ExtResource( 1 )]
+anchor_right = 25.8
+anchor_bottom = 14.85
+margin_right = 1920.0
+margin_bottom = 2160.0
+
+[node name="弃牌堆" type="Control" parent="."]
+script = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="base" type="TextureButton" parent="弃牌堆"]
+margin_left = 1708.56
+margin_top = 845.771
+margin_right = 1836.56
+margin_bottom = 973.771
+texture_normal = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="shadow" type="Sprite" parent="弃牌堆"]
+position = Vector2( 1768.58, 925.222 )
+texture = ExtResource( 2 )
+
+[node name="弃卡堆" parent="弃牌堆" instance=ExtResource( 14 )]
+margin_right = 1920.0
+margin_bottom = 2160.0
+
+[node name="回合结束" type="TextureButton" parent="."]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 1515.35
+margin_top = 653.482
+margin_right = 1732.35
+margin_bottom = 737.482
+hint_tooltip = "aaaaaa"
+disabled = true
+texture_normal = ExtResource( 7 )
+texture_pressed = ExtResource( 6 )
+texture_hover = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="回合结束"]
+margin_left = 82.1093
+margin_top = 27.3516
+margin_right = 146.109
+margin_bottom = 51.3516
+custom_fonts/font = SubResource( 3 )
+text = "回合结束"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+"anims/开始" = SubResource( 4 )
+"anims/结束" = SubResource( 5 )
+
+[connection signal="click" from="手牌" to="." method="_on__click"]
+[connection signal="button_down" from="牌库/base2" to="牌库/抽卡堆" method="_on_base2_button_down"]
+[connection signal="button_down" from="弃牌堆/base" to="弃牌堆/弃卡堆" method="_on_base_button_down"]
+[connection signal="button_down" from="回合结束" to="." method="_on__button_down"]

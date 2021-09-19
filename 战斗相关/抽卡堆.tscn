@@ -1,0 +1,143 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://素材/font/zhs/NotoSansMonoCJKsc-Regular.otf" type="DynamicFontData" id=1]
+[ext_resource path="res://按钮/返回按钮.tscn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+var cards=[]
+
+func _init():
+	#cards=$\"../../牌库\".cards
+	pass
+func _ready():
+	pass
+
+func _on_TextureButton__return():
+	$AnimationPlayer.play(\"卡组退出\")
+	
+
+
+func _on_base2_button_down():
+	cards=$\"../\".cards
+	for y in $ScrollContainer/GridContainer.get_children():
+		y.queue_free()
+	for x in cards:
+		var copy=x.duplicate()
+		$ScrollContainer/GridContainer.add_child(copy)
+		copy.show_on_top=false
+		#调整卡牌的中心点
+		copy.rect_pivot_offset=Vector2(150,210)
+		copy.connect(\"mouse_entered\",self,\"mouse_entered\",[copy])
+		copy.connect(\"mouse_exited\",self,\"mouse_exited\",[copy])
+	$AnimationPlayer.play(\"卡组弹出\")
+
+
+func mouse_entered(card):
+	card.rect_scale=Vector2(1.2,1.2)
+	card.show_on_top=true
+
+func mouse_exited(card):
+	card.rect_scale=Vector2(1,1)
+	card.show_on_top=false
+"
+
+[sub_resource type="DynamicFont" id=2]
+size = 50
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "卡组弹出"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 1080 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "卡组退出"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 1080 ) ]
+}
+
+[node name="抽卡堆" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 1080.0
+margin_bottom = 1080.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0392157, 0.0313726, 0.0313726, 0.603922 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+anchor_top = 0.951
+anchor_right = 1.0
+anchor_bottom = 0.993
+margin_top = -27.08
+margin_bottom = 1.56006
+custom_fonts/font = SubResource( 2 )
+text = "这些牌每回合会随即上手"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -690.0
+margin_top = -420.0
+margin_right = 690.0
+margin_bottom = 420.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="ScrollContainer"]
+custom_constants/vseparation = 20
+custom_constants/hseparation = 10
+columns = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureButton" parent="." instance=ExtResource( 2 )]
+margin_top = 800.0
+margin_right = 241.0
+margin_bottom = 859.0
+rect_scale = Vector2( 1, 1 )
+expand = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+"anims/卡组弹出" = SubResource( 3 )
+"anims/卡组退出" = SubResource( 4 )
+
+[connection signal="_return" from="TextureButton" to="." method="_on_TextureButton__return"]

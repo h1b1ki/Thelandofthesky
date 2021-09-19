@@ -1,0 +1,123 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://素材/images/ui/combat/reticleArrow.png" type="Texture" id=1]
+[ext_resource path="res://素材/images/ui/combat/reticleBlock.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+#中间点x,y的比值
+var middle_x:float=0.1
+var middle_y:float=0.8
+#拐点角度与鼠标角度之比
+var corner_angle_mouse:float=-0.5
+#柄入口与出口长度比   这两个结合就是画线时中点弯曲的角度
+var Handle_in:float=0.3
+var Handle_out:float=0.3
+
+onready var path=$Node2D/Path2D.curve
+#设置骨节点图片
+export var joint:Texture
+#用来存储所有的骨节follow节点
+var alljoint:Array 
+#设置箭头接触的敌人
+var enemy
+signal attack
+
+func _ready():
+	addjoint()
+	pass # Replace with function body.
+
+func _physics_process(delta:float):
+	#将提供的全局位置转换为局部坐标(node2d)空间中的位置
+	var mouse_position=$Node2D.to_local(get_global_mouse_position())
+	#鼠标(parh2d中箭头的点)与原点的角度
+	var mouse_angle_origin=mouse_position.angle_to(Vector2(0,-1))
+	path.set_point_position(2,mouse_position)
+	#按照比值计算中间点的位置
+	var middle=Vector2(path.get_point_position(2).x*middle_x,path.get_point_position(2).y*middle_y)
+	path.set_point_position(1,middle)
+	
+	#求中心点的柄长  distance_to 返回此向量(原点)与目标(箭头)之间的距离。
+	var Handle_length=abs(Vector2(0,0).distance_to(path.get_point_position(2)))
+	var Handle_angle=Vector2(0,-1).rotated(mouse_angle_origin*corner_angle_mouse)
+	var Handle=Handle_length*Handle_angle
+	path.set_point_out(1,Handle*Handle_in)
+	path.set_point_in(1,-Handle*Handle_out)
+	Refresh()
+	#使用了卡牌
+	if Input.is_action_just_pressed(\"左键按下\")&&enemy:
+		emit_signal(\"attack\",enemy)
+
+func addjoint():
+	#初始设定20个骨节
+	for x in 20:
+		var P=PathFollow2D.new()
+		$Node2D/Path2D.add_child(P)
+		alljoint.append(P)
+		var S=Sprite.new()
+		S.texture=joint
+		P.add_child(S)
+		#设置90度与线相切
+		S.rotation_degrees=90
+		var zoom=0.015*x+0.3
+		S.scale=Vector2(zoom,zoom)
+	pass
+func Refresh():
+	for x in alljoint.size():
+		alljoint[x].unit_offset=1/20.0*x
+	#使箭头永远在前端
+	$Node2D/Path2D/PathFollow2D.unit_offset=1
+
+
+func _on_Area2D_area_entered(area):
+	if area.z_index==5:
+		$Node2D/Path2D/PathFollow2D/reticleArrow.modulate=Color(0.839216, 0.129412, 0.07451)
+		enemy=area
+
+
+func _on_Area2D_area_exited(area):
+	if area.z_index==5:
+		$Node2D/Path2D/PathFollow2D/reticleArrow.modulate=Color(1, 1, 1)
+		enemy=null
+
+"
+
+[sub_resource type="Curve2D" id=2]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 2.72284, -1.40216, -82.0553, 72.5417, 82.0553, -72.5417, 106.567, -206.183, 0, 0, 0, 0, 320.625, -291.806 )
+}
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 61.2897
+
+[node name="箭头" type="Node2D"]
+z_index = 5
+script = SubResource( 1 )
+joint = ExtResource( 2 )
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2( 960, 1080 )
+
+[node name="Path2D" type="Path2D" parent="Node2D"]
+curve = SubResource( 2 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Node2D/Path2D"]
+position = Vector2( 320.625, -291.806 )
+rotation = -0.110174
+offset = 469.232
+
+[node name="reticleArrow" type="Sprite" parent="Node2D/Path2D/PathFollow2D"]
+position = Vector2( 3.1123, -0.173584 )
+rotation = 1.5708
+z_index = 1
+texture = ExtResource( 1 )
+
+[node name="Area2D" type="Area2D" parent="Node2D/Path2D/PathFollow2D/reticleArrow"]
+position = Vector2( -1.34653, 2.04651 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Path2D/PathFollow2D/reticleArrow/Area2D"]
+position = Vector2( -0.506378, 35.0687 )
+shape = SubResource( 3 )
+
+[connection signal="area_entered" from="Node2D/Path2D/PathFollow2D/reticleArrow/Area2D" to="." method="_on_Area2D_area_entered"]
+[connection signal="area_exited" from="Node2D/Path2D/PathFollow2D/reticleArrow/Area2D" to="." method="_on_Area2D_area_exited"]
