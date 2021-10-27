@@ -4,8 +4,7 @@
 script/source = "extends Node2D
 
 var FCT = preload(\"res://战斗相关/伤害飘字label.tscn\")
-
-export var travel = Vector2(0, -80)
+export var travel = Vector2(0,0)
 export var duration = 2
 export var spread = PI/2
 
@@ -14,9 +13,15 @@ func _ready():
 		#value数值 travel方向 duration显示时间  spread crit暴击
 func show_value(value, crit=false):
 	if value!=0:
+		travel=Vector2(rand_range(-90,90),-80)
 		var fct = FCT.instance()
 		add_child(fct)
 		fct.show_value(str(value), travel, duration, spread, crit)
+#func rand_travel():
+#	randomize()
+#	var a=randi()%180
+#	var b=randi()%270
+#	travel=Vector2(a, b)
 
 "
 
